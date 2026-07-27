@@ -21,7 +21,7 @@
     "invert_adc": false,
     "raw": {
       "input": ["A0", "A1", "A2"],
-      "vector": [1, 2, 3]
+      "vector": [3, 2, 1]
     }
   },
   "calibration": {
@@ -48,7 +48,7 @@
       "KC_E",
       "KC_Z",
       "KC_X",
-      "KC_MUTE",
+      "KC_F15",
       "KC_F14",
       "KC_F13"
     ],
