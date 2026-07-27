@@ -94,7 +94,7 @@ static uint8_t enc_pulse_key;
  * discharge through a pressed key before we sample it.
  */
 static void gd_settle(void) {
-  for (volatile uint32_t i = 0; i < 32; i++) {
+  for (volatile uint32_t i = 0; i < 256; i++) {
   }
 }
 
