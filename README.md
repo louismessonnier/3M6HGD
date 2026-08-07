@@ -1,94 +1,82 @@
-# gd-keypad
+# 3H6MGD
 
-A custom analog macropad for **Geometry Dash**, built around magnetic Hall-effect switches for continuous key-travel sensing — the same technology used in Wooting and SayoDevice keyboards.
+A custom analog macropad for **Geometry Dash**, built around magnetic Hall-effect
+switches for continuous key-travel sensing. The macroapd has three analog jump keys 
+alongside six mechanical keys and a rotary encoder for volume control.
 
-<!-- TODO: hero image of the assembled board or a KiCad 3D render -->
-<!-- ![gd-keypad](images/hero.png) -->
+<p align="center">
+  <img src="images/gd-keypad_final_picture_left.JPEG" width="49%" alt="GD Keypad, left view">
+</p>
 
 ---
 
-## Overview
+## Why analog switches
 
-<!-- TODO: 2–3 sentences. What it is, why you built it, what makes it interesting.
-Suggested points to cover:
-- Hall-effect switches measure how far a key has travelled, not just pressed/not-pressed
-- This enables rapid trigger and adjustable actuation, which matter in a timing-based game
-- Compact macropad form factor: 3 analog jump keys + 6 mechanical keys + rotary encoder -->
+Most keyboards report a key as simply pressed or not pressed. Hall-effect
+switches instead measure how far the key has travelled, by reading the field of
+a magnet in the switch stem with a linear sensor on the PCB. That continuous
+position enables features that matter in a timing-based game like Geometry Dash —
+primarily **adjustable actuation** (choose exactly how far down counts as a press). 
+This board brings that to a compact macropad.
 
 ## Features
 
-<!-- TODO: trim/expand as needed -->
-- **3 analog Hall-effect keys** with per-key position sensing (rapid trigger, adjustable actuation point)
-- **6 mechanical keys** in a diode matrix
-- **Rotary encoder** for per-application volume control in Geometry Dash
+- **3 analog Hall-effect jump keys** programmable with hmkconf
+- **6 mechanical keys** in a diode matrix for non-jump inputs
+- **Rotary encoder** mapped to per-application volume and mute for Geometry Dash
 - **8 kHz USB polling** via the AT32F405's high-speed USB
-- USB-C connector, DFU flashing (no external programmer required)
-- Configurable through the [hmkconf](https://hmkconf.com/) web tool
+- Runs [libhmk](https://github.com/peppapighs/libhmk): analog behaviour is
+  configured live in the browser through [hmkconf](https://hmkconf.com/)
+- USB-C, flashed over WebUSB DFU
 
 ## Hardware
 
-<!-- TODO: confirm/adjust each line against your final BOM -->
-- **MCU:** Artery AT32F405RCT7 (Cortex-M4F, LQFP-64)
-- **Analog switches:** <!-- final switch choice --> with <!-- final sensor, e.g. SS39ET --> linear Hall sensors
-- **Mechanical switches:** <!-- hotswap socket type + switch --> 
-- **Rotary encoder:** <!-- final encoder part number -->
+- **MCU:** Artery AT32F405RCT7
+- **Analog switches:** Wooting Lekker Tikken Medium, with MT9102ET linear Hall
+  sensors (SOT-23-3) on the PCB
+- **Mechanical switches:** MX switches on GATERON Upgrade Hot-swap PCB 2.0 Socket-KS-2P02B01-01-a
+- **Rotary encoder:** Alps EC11E15244G1 30 detent with push switch
 - **PCB:** 2-layer, 1.2 mm, designed in KiCad, manufactured by JLCPCB
+- **Case:** two-piece sandwich, printed in PETG or PLA, with a printed knob
 
-<!-- Optional: a few design highlights that show depth. Examples:
-- Separate low-noise LDO for the analog supply to keep the ADC reference clean
-- Dedicated 12 MHz crystal required by the high-speed USB PHY
-- Solid ground plane opposite the MCU for tight decoupling return paths -->
+<p align="center">
+  <img src="images/gd-keypad_pcb_3d_front.png" width="49%" alt="PCB, front">
+  <img src="images/gd-keypad_pcb_3d_back.png" width="49%" alt="PCB, back">
+</p>
 
 ## Firmware
 
-This board runs [libhmk](https://github.com/peppapighs/libhmk), an open-source Hall-effect keyboard firmware. Analog behaviour (actuation points, rapid trigger, key mapping) is configured at runtime through [hmkconf](https://hmkconf.com/).
-
-On top of the base firmware, this project adds:
-- <!-- TODO --> Mechanical matrix scanning
-- <!-- TODO --> Rotary encoder handling (volume via F13/F14)
-- <!-- TODO --> A companion PC script (AutoHotkey + SoundVolumeView) for per-application Geometry Dash volume control
-
-<!-- TODO: note what is implemented vs planned -->
+The board runs [libhmk](https://github.com/peppapighs/libhmk). Everything about
+the firmware (how the board is defined, the custom module that adds the
+mechanical matrix and encoder, how to build and flash it, and the calibration and
+volume-control setup) is in **[firmware/README.md](firmware/README.md)**.
 
 ## Repository layout
 
-<!-- TODO: adjust descriptions to match what actually ends up in each folder -->
 ```
+firmware/   libhmk keyboard definition, custom matrix + encoder module, build docs
+kicad/      KiCad project (schematic and PCB)_
 cad/        Case and knob models
-docs/       Design notes and documentation
 images/     Renders and photos
-kicad/      KiCad project (schematic + PCB)
-libraries/  KiCad symbol/footprint libraries used by the project
+docs/       Design notes and references
 ```
-
-## Build / usage
-
-<!-- TODO: fill in once the board is assembled and firmware is written.
-Suggested sections:
-- Ordering the PCB (JLCPCB, board settings, BOM/CPL)
-- Bill of materials
-- Assembly notes (which parts are hand-soldered)
-- Flashing the firmware (DFU: hold BOOT0, plug in USB, flash with STM32CubeProgrammer / WebUSB DFU)
-- Configuring with hmkconf
-- Setting up the volume-control script -->
-
-## Design notes
-
-<!-- Optional but strong for a portfolio. A few bullets on decisions and what you learned.
-Examples from this build:
-- Why an analog/Hall-effect board over a standard mechanical one
-- The two-LDO split for analog supply isolation
-- Why the crystal must be 12 MHz (fixed input to the USB high-speed PLL)
-- Building on an existing open-source design (HE60) vs designing from scratch -->
 
 ## Acknowledgements
 
-This project builds on the work of others in the open-source Hall-effect keyboard community:
+This project builds on the open-source Hall-effect keyboard community:
 
-- **[libhmk](https://github.com/peppapighs/libhmk)** and **[HE60](https://github.com/peppapighs/HE60)** by [peppapighs](https://github.com/peppapighs) — firmware and reference hardware design that this board is based on
-- **[marbastlib](https://github.com/ebastler/marbastlib)** by [ebastler](https://github.com/ebastler) — KiCad footprint library for the Hall-effect and mechanical switches
+- **[libhmk](https://github.com/peppapighs/libhmk)** and
+  **[HE60](https://github.com/peppapighs/HE60)** by
+  [peppapighs](https://github.com/peppapighs) - the firmware this board runs and
+  the reference hardware it draws from
+- **[marbastlib](https://github.com/ebastler/marbastlib)** by
+  [ebastler](https://github.com/ebastler) - KiCad footprints for the Hall-effect
+  and mechanical switches
+- [Encoder Knob](https://www.thingiverse.com/thing:4206617) by V0lD, from Thingiverse, licensed CC BY-NC
 
 ## License
 
-<!-- TODO: choose a license. MIT is a common, permissive choice for hardware/firmware portfolio projects.
-Note: if you reuse or adapt files from libhmk / HE60 / marbastlib, check and respect their licenses. -->
+The firmware (`firmware/`) is licensed under **GNU General Public License v3.0**, inherited from
+[libhmk](https://github.com/peppapighs/libhmk), on which it is based. The hardware
+(`kicad/`) and case (`cad/`) files are licensed under **MIT License**. The encoder
+knob is a third-party design under CC BY-NC 4.0 — see Acknowledgements.
